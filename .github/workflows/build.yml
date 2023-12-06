@@ -1,8 +1,8 @@
 # Runs CI tests and generates wheels on the following platforms:
 #
-# * Linux (py2 and py3)
-# * macOS (py2 and py3)
-# * Windows (py3, py2 is done by appveyor)
+# * Linux
+# * macOS
+# * Windows
 #
 # Useful URLs:
 # * https://github.com/pypa/cibuildwheel
@@ -31,6 +31,8 @@ jobs:
           archs: "x86_64"
         - os: windows-2019
           archs: "AMD64"
+        - os: macos13-arm64
+          archs: "arm64"
 
     steps:
     - uses: actions/checkout@v4
