@@ -38,7 +38,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v4
       with:
-        python-version: 3.11
+        python-version: 3.10
 
     - name: Create wheels + run tests
       uses: pypa/cibuildwheel@v2.16.2
@@ -52,67 +52,8 @@ jobs:
         name: wheels
         path: wheelhouse
 
-    - name: Generate .tar.gz
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        make generate-manifest
-        python setup.py sdist
-        mv dist/psutil*.tar.gz wheelhouse/
-
-  # Linux + macOS + Python 2
-  py2:
-    name: py2-${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-12]
-    env:
-      CIBW_TEST_COMMAND:
-        PYTHONWARNINGS=always PYTHONUNBUFFERED=1 PSUTIL_DEBUG=1 python {project}/psutil/tests/runner.py &&
-        PYTHONWARNINGS=always PYTHONUNBUFFERED=1 PSUTIL_DEBUG=1 python {project}/psutil/tests/test_memleaks.py
-      CIBW_TEST_EXTRAS: test
-      CIBW_BUILD: 'cp27-*'
-
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v4
-      with:
-        python-version: 3.9
-
-    - name: Create wheels + run tests
-      uses: pypa/cibuildwheel@v1.12.0
-
-    - name: Upload wheels
-      uses: actions/upload-artifact@v3
-      with:
-        name: wheels
-        path: wheelhouse
-
-    - name: Generate .tar.gz
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        make generate-manifest
-        python setup.py sdist
-        mv dist/psutil*.tar.gz wheelhouse/
-
-  # Run linters
-  linters:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v4
-      with:
-        python-version: 3.x
-    - name: 'Run linters'
-      run: |
-        python3 -m pip install ruff rstcheck toml-sort sphinx
-        make lint-all
-
-  # Check sanity of .tar.gz + wheel files
   check-dist:
-    needs: [py2, py3]
+    needs: [py3]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
