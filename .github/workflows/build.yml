@@ -27,12 +27,10 @@ jobs:
         include:
         - os: ubuntu-latest
           archs: "x86_64 i686"
-        - os: macos-12
+        - os: macos-latest
           archs: "x86_64 arm64"
-        - os: windows-2019
+        - os: windows-latest
           archs: "AMD64"
-        - os: windows-2019
-          archs: "x86"
 
     steps:
     - uses: actions/checkout@v4
@@ -45,6 +43,9 @@ jobs:
       env:
         CIBW_ARCHS: "${{ matrix.archs }}"
         CIBW_PRERELEASE_PYTHONS: True
+        CIBW_SKIP: "*musllinux* pp*-win* pp31*"
+        CIBW_BUILD: "cp39* cp310* cp311*"
+        CIBW_BUILD_VERBOSITY: 1
 
     - name: Upload wheels
       uses: actions/upload-artifact@v3
