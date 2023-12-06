@@ -46,7 +46,7 @@ jobs:
         CIBW_SKIP: "*musllinux* pp*-win* pp31*"
         CIBW_BUILD_VERBOSITY: 1
         CIBW_TEST_COMMAND: >
-            python -c "import psutil"  &&
+            python -c "import psutil" 
     - name: Upload wheels
       uses: actions/upload-artifact@v3
       with:
