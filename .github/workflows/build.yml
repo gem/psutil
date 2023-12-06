@@ -26,9 +26,9 @@ jobs:
       matrix:
         include:
         - os: ubuntu-22.04
-          archs: "x86_64 i686"
+          archs: "x86_64"
         - os: macos-12
-          archs: "x86_64 arm64"
+          archs: "x86_64"
         - os: windows-2019
           archs: "AMD64"
 
@@ -43,7 +43,7 @@ jobs:
       env:
         CIBW_ARCHS: "${{ matrix.archs }}"
         CIBW_PRERELEASE_PYTHONS: True
-        CIBW_SKIP: "*musllinux* pp*-win* pp31*"
+        CIBW_SKIP: "*musllinux* pp* pp31*"
         CIBW_BUILD_VERBOSITY: 1
         CIBW_TEST_COMMAND: >
             python -c "import psutil" 
